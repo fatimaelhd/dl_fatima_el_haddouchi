@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Travailler sur la tâche</title>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light py-5">
+
+<div class="container">
+  <h2 class="mb-4 text-primary">
+    🛠️ Travailler sur la tâche : <span th:text="${tache.id}"></span>
+  </h2>
+
+  <form th:action="@{/user/{id}/annoter(id=${tache.id})}" method="post" th:object="${annotationForm}" class="bg-white p-4 rounded shadow-sm">
+    <input type="hidden" th:field="*{coupleId}" />
+
+    <div class="mb-3">
+      <p><strong>📝 Texte 1 :</strong></p>
+      <div class="alert alert-secondary" th:text="${couple.texte1}"></div>
+    </div>
+
+    <div class="mb-3">
+      <p><strong>📝 Texte 2 :</strong></p>
+      <div class="alert alert-secondary" th:text="${couple.texte2}"></div>
+    </div>
+
+    <div class="mb-4">
+      <p><strong>📌 Choisissez une classe :</strong></p>
+      <div class="form-check" th:each="classe : ${classesPossibles}">
+        <input class="form-check-input" type="radio" th:field="*{classeChoisie}" th:value="${classe.nomClasse}" required>
+        <label class="form-check-label" th:text="${classe.nomClasse}"></label>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <a class="btn btn-outline-secondary"
+           th:href="@{'/user/' + ${tache.id} + '/travailler?page=' + ${page - 1}}"
+           th:if="${page > 0}">
+          ← Précédent
+        </a>
+      </div>
+
+      <div>
+        <a class="btn btn-outline-secondary"
+           th:href="@{'/user/' + ${tache.id} + '/travailler?page=' + ${page + 1}}"
+           th:if="${page < maxPage - 1}">
+          Suivant →
+        </a>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 mb-3">✅ Valider</button>
+
+    <!-- Bouton de retour -->
+    <a th:href="@{/user/home}" class="btn btn-secondary w-100">← Retour </a>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
