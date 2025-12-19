@@ -18,6 +18,14 @@ pipeline {
                 sh 'mvn clean test'
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=jee-projet'
+                }
+            }
+        }
+        
     }
 
     post {
@@ -25,4 +33,5 @@ pipeline {
             junit 'target/surefire-reports/*.xml'
         }
     }
+    
 }
