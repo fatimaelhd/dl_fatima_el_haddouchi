@@ -26,19 +26,18 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t nexus-ip:8082/jee-projet:v1 .'
+                sh 'docker build -t host.docker.internal:8081/jee-projet:v1 .'
             }
         }
 
         stage('Push to Nexus') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'nexsus-docker', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh 'docker login nexus-ip:8082 -u $USER -p $PASS'
-                    sh 'docker push nexus-ip:8082/jee-projet:v1'
+                    sh 'docker login host.docker.internal:8081 -u $USER -p $PASS'
+                    sh 'docker push host.docker.internal:8081/jee-projet:v1'
                 }
             }
         }
-
 
         stage('SonarQube Analysis') {
             steps {
