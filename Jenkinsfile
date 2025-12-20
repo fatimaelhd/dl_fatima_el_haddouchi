@@ -24,20 +24,27 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+      stage('Build Docker Image') {
             steps {
-                sh 'docker build -t host.docker.internal:8081/jee-projet:v1 .'
+                // Construire l'image en pointant vers le port du Docker Registry
+                sh 'docker build -t host.docker.internal:8082/jee-projet:v1 .'
             }
         }
 
         stage('Push to Nexus') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'nexsus-docker', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh 'docker --config /var/jenkins_home/.docker login host.docker.internal:8081 -u $USER -p $PASS '
-                    sh 'docker --config /var/jenkins_home/.docker push host.docker.internal:8081/jee-projet:v1 '
+                withCredentials([usernamePassword(
+                    credentialsId: 'nexsus-docker',
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS'
+                )]) {
+                    // Login et push vers le port 8082
+                    sh 'docker login host.docker.internal:8082 -u $USER -p $PASS'
+                    sh 'docker push host.docker.internal:8082/jee-projet:v1'
                 }
             }
         }
+
 
 
         stage('SonarQube Analysis') {
