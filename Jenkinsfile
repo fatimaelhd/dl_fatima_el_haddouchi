@@ -32,10 +32,13 @@ pipeline {
 
         stage('Push to Nexus') {
             steps {
-                sh 'docker login nexus-ip:8082 -u <username> -p <password>'
-                sh 'docker push nexus-ip:8082/jee-projet:v1'
+                withCredentials([usernamePassword(credentialsId: 'nexsus-docker', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh 'docker login nexus-ip:8082 -u $USER -p $PASS'
+                    sh 'docker push nexus-ip:8082/jee-projet:v1'
+                }
             }
         }
+
 
         stage('SonarQube Analysis') {
             steps {
