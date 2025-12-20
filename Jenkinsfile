@@ -33,11 +33,12 @@ pipeline {
         stage('Push to Nexus') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'nexsus-docker', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh 'docker login host.docker.internal:8081 -u $USER -p $PASS'
-                    sh 'docker push host.docker.internal:8081/jee-projet:v1'
+                    sh 'docker --config /var/jenkins_home/.docker login host.docker.internal:8081 -u $USER -p $PASS --tls-verify=false'
+                    sh 'docker --config /var/jenkins_home/.docker push host.docker.internal:8081/jee-projet:v1 --tls-verify=false'
                 }
             }
         }
+
 
         stage('SonarQube Analysis') {
             steps {
